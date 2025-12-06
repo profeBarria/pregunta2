@@ -30,17 +30,17 @@ while True:
     # Simulamos la cantidad de visitas de la última hora
     hourly_visits = random.randint(0, 300)
 
-    # 1️⃣ Counter: acumulado total del día
+    # Counter: acumulado total del día
     visits_total.inc(hourly_visits)
 
-    # 2️⃣ Gauge: visitas de la última hora
+    # Gauge: visitas de la última hora
     visits_per_hour.set(hourly_visits)
 
-    # 3️⃣ Histogram: distribución de visitas por hora
+    # Histogram: distribución de visitas por hora
     visits_histogram.observe(hourly_visits)
 
     # Enviar al Pushgateway
     push_to_gateway(PUSHGATEWAY_URL, job='store_traffic_metrics', registry=registry)
-    print(f"📤 Métricas enviadas al Pushgateway — Visitas esta hora: {hourly_visits}")
+    print(f"Métricas enviadas al Pushgateway — Visitas esta hora: {hourly_visits}")
 
     time.sleep(15)
