@@ -1,4 +1,4 @@
-from prometheus_client import CollectorRegistry, Gauge, Counter, Histogram, push_to_gateway
+from prometheus_client import CollectorRegistry, Gauge, Counter, push_to_gateway
 import random, time
 
 PUSHGATEWAY_URL = "http://localhost:9091"
@@ -18,14 +18,6 @@ visits_per_hour = Gauge(
     registry=registry
 )
 
-# 3. Histogram → Distribución de visitas por hora
-visits_histogram = Histogram(
-    'store_visits_hourly_hist',
-    'Histograma de visitas por hora',
-    registry=registry,
-    buckets=[10, 20, 50, 100, 200, 300, 500]  # ejemplo de rangos
-)
-
 while True:
     # Simulamos la cantidad de visitas de la última hora
     hourly_visits = random.randint(0, 1000)
@@ -35,9 +27,6 @@ while True:
 
     # Gauge: visitas de la última hora
     visits_per_hour.set(hourly_visits)
-
-    # Histogram: distribución de visitas por hora
-    visits_histogram.observe(hourly_visits)
 
     # Enviar al Pushgateway
     push_to_gateway(PUSHGATEWAY_URL, job='store_traffic_metrics', registry=registry)
